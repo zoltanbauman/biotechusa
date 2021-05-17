@@ -17,7 +17,7 @@ trait Publishable
     /**
      * @throws NotPublishableException
      */
-    public function publish()
+    public function publish(): void
     {
         if ( $this->isPublishable() ) {
             $this->published = true;
@@ -25,5 +25,10 @@ trait Publishable
         } else {
             throw new NotPublishableException();
         }
+    }
+
+    public function unPublish(): void
+    {
+        $this->published = false;
     }
 }
