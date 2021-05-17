@@ -1,12 +1,14 @@
 <?php
 namespace Biotech\Traits;
 
+use Biotech\Models\Campaign;
 use Biotech\Models\Interfaces\CampaignInterface;
+use Biotech\Models\Interfaces\PublishableInterface;
 
 trait Campaignable
 {
     /**
-     * @var CampaignInterface
+     * @var CampaignInterface[]|PublishableInterface[]|Campaign[]
      */
     protected array $campaigns = [];
 
@@ -17,13 +19,28 @@ trait Campaignable
         }
     }
 
-    public function getCampaigns(): CampaignInterface
+    public function getCampaigns(): array
     {
         return $this->campaigns;
     }
 
+    /**
+     * @param CampaignInterface|Campaign|null $campaign
+     * @return bool
+     */
     public function hasCampaign(CampaignInterface $campaign = null): bool
     {
-        return !is_null($this->campaigns);
+        foreach ($this->campaigns as $campaignElement) {
+            if ($campaignElement->getId() == $campaign->getId()) return true;
+        }
+        return false;
+    }
+
+    public function hasPublishedCampaign(): bool
+    {
+        foreach ($this->campaigns as $campaign) {
+            if ($campaign->isPublished()) return true;
+        }
+        return false;
     }
 }

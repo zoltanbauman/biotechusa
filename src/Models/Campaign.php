@@ -14,11 +14,20 @@ class Campaign extends BaseModel implements CampaignInterface, PublishableInterf
 {
     use Publishable;
 
+    /**
+     * @var array|PublishableInterface[]|CampaignableInterface[]
+     */
     protected array $items = [];
 
     public function isPublishable(): bool
     {
         if (empty($this->items)) return false;
+
+        foreach ($this->items as $item) {
+            if ($item->hasPublishedCampaign() OR !$item->isPublishable()) {
+                return false;
+            }
+        }
 
         return true;
     }

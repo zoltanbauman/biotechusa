@@ -52,6 +52,9 @@ class CampaignTest extends TestCase
         $post = (new BlogPost())->setId(1);
 
         $this->campaign->addCampaignItem($product, $coupon, $post);
+
+        $this->getDateMocker(__NAMESPACE__, "2");
+
         $this->campaign->publish();
 
         $this->assertTrue($this->campaign->isPublished());
@@ -69,6 +72,40 @@ class CampaignTest extends TestCase
         $campaign2->addCampaignItem($product, $coupon, $post);
 
         $this->assertEquals($this->campaign->getCampaignItems(), $campaign2->getCampaignItems());
+    }
+
+    public function testPublishableWithItems()
+    {
+        $product = (new Product())->setId(1);
+        $coupon = (new Coupon())->setId(1);
+        $post = (new BlogPost())->setId(1);
+
+        $this->campaign->addProduct($product);
+        $this->assertTrue($this->campaign->isPublishable());
+
+        $this->getDateMocker(__NAMESPACE__, "3");
+        $this->campaign->addPost($post);
+        $this->assertTrue($this->campaign->isPublishable());
+
+        $this->campaign->addCoupon($coupon);
+        $this->assertTrue($this->campaign->isPublishable());
+    }
+
+    public function testNotPublishableWithMultipleCampaign()
+    {
+        $this->getDateMocker(__NAMESPACE__, "3")->disable();
+        $product = (new Product())->setId(1);
+        $coupon = (new Coupon())->setId(1);
+        $post = (new BlogPost())->setId(1);
+
+        $this->campaign->addCampaignItem($product, $coupon, $post);
+        $this->campaign->publish();
+
+        $this->expectException(NotPublishableException::class);
+        $campaign2 = new Campaign();
+        $campaign2->addCampaignItem($product);
+        $campaign2->publish();
+
     }
 
 /*
