@@ -6,7 +6,7 @@ use DateTime;
 
 trait Publishable
 {
-    protected bool $published = true;
+    protected bool $published = false;
     protected DateTime $publishedAt;
 
     public function isPublished(): bool
