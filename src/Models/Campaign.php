@@ -1,7 +1,6 @@
 <?php
 namespace Biotech\Models;
 
-use Biotech\Exceptions\CampaignItemAlreadyUsedException;
 use Biotech\Models\Interfaces\CampaignableInterface;
 use Biotech\Models\Interfaces\CampaignInterface;
 use Biotech\Models\Interfaces\CouponInterface;
@@ -68,7 +67,6 @@ class Campaign extends BaseModel implements CampaignInterface, PublishableInterf
 
     /**
      * @param ProductInterface|CampaignableInterface $product
-     * @throws CampaignItemAlreadyUsedException
      */
     public function addProduct(ProductInterface $product): void
     {
@@ -77,7 +75,6 @@ class Campaign extends BaseModel implements CampaignInterface, PublishableInterf
 
     /**
      * @param CouponInterface|CampaignableInterface $coupon
-     * @throws CampaignItemAlreadyUsedException
      */
     public function addCoupon(CouponInterface $coupon): void
     {
@@ -86,7 +83,6 @@ class Campaign extends BaseModel implements CampaignInterface, PublishableInterf
 
     /**
      * @param PostInterface|CampaignableInterface $post
-     * @throws CampaignItemAlreadyUsedException
      */
     public function addPost(PostInterface $post): void
     {

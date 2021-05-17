@@ -74,6 +74,9 @@ class CampaignTest extends TestCase
         $this->assertEquals($this->campaign->getCampaignItems(), $campaign2->getCampaignItems());
     }
 
+    /**
+     * A kampányok futtatásának feltétele, hogy jóváhagyott státuszban legyenek
+     */
     public function testPublishableWithItems()
     {
         $product = (new Product())->setId(1);
@@ -91,21 +94,23 @@ class CampaignTest extends TestCase
         $this->assertTrue($this->campaign->isPublishable());
     }
 
+    /**
+     * Nem futhat két kampány egyidőben, ugyanazokra az elemekre
+     *
+     * @throws NotPublishableException
+     */
     public function testNotPublishableWithMultipleCampaign()
     {
         $this->getDateMocker(__NAMESPACE__, "3")->disable();
         $product = (new Product())->setId(1);
-        $coupon = (new Coupon())->setId(1);
-        $post = (new BlogPost())->setId(1);
 
-        $this->campaign->addCampaignItem($product, $coupon, $post);
+        $this->campaign->addCampaignItem($product);
         $this->campaign->publish();
 
         $this->expectException(NotPublishableException::class);
         $campaign2 = new Campaign();
         $campaign2->addCampaignItem($product);
         $campaign2->publish();
-
     }
 
 /*
