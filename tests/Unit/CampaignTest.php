@@ -19,6 +19,11 @@ class CampaignTest extends TestCase
     {
         $this->assertInstanceOf(CampaignInterface::class, $this->campaign);
         $this->assertFalse($this->campaign->isPublished());
+        $this->campaign->setStart('2021-05-01');
+        $this->campaign->setFinish('2021-05-31');
+
+        $this->assertSame('2021-05-01', $this->campaign->getStart()->format('Y-m-d'));
+        $this->assertSame('2021-05-31', $this->campaign->getFinish()->format('Y-m-d'));
     }
 
     public function testPublishOnEmptyItems()

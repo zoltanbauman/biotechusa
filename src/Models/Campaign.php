@@ -8,15 +8,53 @@ use Biotech\Models\Interfaces\PostInterface;
 use Biotech\Models\Interfaces\ProductInterface;
 use Biotech\Models\Interfaces\PublishableInterface;
 use Biotech\Traits\Publishable;
+use DateTime;
+use Exception;
 
 class Campaign extends BaseModel implements CampaignInterface, PublishableInterface
 {
     use Publishable;
 
+    protected DateTime $start;
+    protected DateTime $finish;
+
     /**
      * @var array|PublishableInterface[]|CampaignableInterface[]
      */
     protected array $items = [];
+
+    /**
+     * @param DateTime|string|null $start
+     * @throws Exception
+     */
+    public function setStart($start = null): void
+    {
+        $this->start = ($start instanceof DateTime) ? $start : new DateTime($start);
+    }
+
+    public function getStart(): DateTime
+    {
+        return $this->start;
+    }
+
+    /**
+     * @param DateTime|string|null $finish
+     * @throws Exception
+     */
+    public function setFinish($finish = null): void
+    {
+        $this->finish = ($finish instanceof DateTime) ? $finish : new DateTime($finish);
+    }
+
+    public function getFinish(): DateTime
+    {
+        return $this->finish;
+    }
+
+    protected function isStartable(): bool
+    {
+        return $this->getStart() <= $this->getDate();
+    }
 
     public function isPublishable(): bool
     {
