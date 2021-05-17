@@ -18,6 +18,8 @@ class Campaign extends BaseModel implements CampaignInterface, PublishableInterf
 
     public function isPublishable(): bool
     {
+        if (empty($this->items)) return false;
+
         return true;
     }
 
@@ -34,6 +36,9 @@ class Campaign extends BaseModel implements CampaignInterface, PublishableInterf
         $this->items[] = $campaignItem;
     }
 
+    /**
+     * @return array|CampaignableInterface[]
+     */
     public function getCampaignItems(): array
     {
         return $this->items;
@@ -71,9 +76,9 @@ class Campaign extends BaseModel implements CampaignInterface, PublishableInterf
      */
     public function getProducts(): array
     {
-        return array_filter($this->items, function(CampaignableInterface $item) {
+        return array_values(array_filter($this->items, function(CampaignableInterface $item) {
             return $item instanceof ProductInterface;
-        });
+        }));
     }
 
     /**
@@ -81,9 +86,9 @@ class Campaign extends BaseModel implements CampaignInterface, PublishableInterf
      */
     public function getCoupons(): array
     {
-        return array_filter($this->items, function(CampaignableInterface $item) {
+        return array_values(array_filter($this->items, function(CampaignableInterface $item) {
             return $item instanceof CouponInterface;
-        });
+        }));
     }
 
     /**
@@ -91,8 +96,8 @@ class Campaign extends BaseModel implements CampaignInterface, PublishableInterf
      */
     public function getPosts(): array
     {
-        return array_filter($this->items, function(CampaignableInterface $item) {
+        return array_values(array_filter($this->items, function(CampaignableInterface $item) {
             return $item instanceof PostInterface;
-        });
+        }));
     }
 }

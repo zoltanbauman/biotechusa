@@ -5,7 +5,10 @@ use Biotech\Models\Interfaces\CampaignInterface;
 
 trait Campaignable
 {
-    protected CampaignInterface $campaign;
+    /**
+     * @var CampaignInterface
+     */
+    protected $campaign;
 
     public function setCampaign(CampaignInterface $campaign): void
     {
