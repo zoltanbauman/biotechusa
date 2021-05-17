@@ -3,8 +3,6 @@ namespace Biotech\Models;
 
 use Biotech\Exceptions\NotPublishableException;
 use Biotech\Models\Interfaces\PostInterface;
-use phpmock\Mock;
-use phpmock\MockBuilder;
 use phpmock\phpunit\PHPMock;
 use Tests\TestCase;
 
@@ -13,23 +11,6 @@ class BlogTest extends TestCase
     use PHPMock;
 
     protected BlogPost $blogPost;
-
-    protected function getDateMocker($dateText = '2021-05-22 10:00:00'): Mock
-    {
-        $builder = new MockBuilder();
-        $builder->setNamespace(__NAMESPACE__);
-
-        $builder->setName('date')
-            ->setFunction(
-                function() use ($dateText) {
-                    return $dateText;
-                }
-            );
-        $dateMock = $builder->build();
-        $dateMock->enable();
-
-        return $dateMock;
-    }
 
     protected function setUp(): void
     {
@@ -44,7 +25,7 @@ class BlogTest extends TestCase
 
     public function testPublish()
     {
-        $dateMock = $this->getDateMocker(1);
+        $dateMock = $this->getDateMocker(__NAMESPACE__,1);
 
         $this->blogPost->publish();
 
@@ -57,7 +38,7 @@ class BlogTest extends TestCase
     {
         $this->expectException(NotPublishableException::class);
 
-        $dateMocker = $this->getDateMocker("6");
+        $dateMocker = $this->getDateMocker(__NAMESPACE__, "6");
 
         $this->blogPost->publish();
 
