@@ -1,7 +1,6 @@
 <?php
 namespace Biotech\Models;
 
-use Biotech\Exceptions\NotPublishableException;
 use Biotech\Models\Interfaces\CouponInterface;
 use Tests\TestCase;
 
@@ -28,7 +27,7 @@ class CouponTest extends TestCase
         $this->coupon->publish();
         $this->assertTrue($this->coupon->isPublished());
     }
-
+/*
     public function testNotPublishableException()
     {
         $coupon = $this->createMock(Coupon::class);
@@ -39,4 +38,5 @@ class CouponTest extends TestCase
 
         $this->coupon->publish();
     }
+*/
 }

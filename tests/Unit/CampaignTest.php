@@ -1,7 +1,6 @@
 <?php
 namespace Biotech\Models;
 
-use Biotech\Exceptions\CampaignItemAlreadyUsedException;
 use Biotech\Exceptions\NotPublishableException;
 use Biotech\Models\Interfaces\CampaignInterface;
 use Tests\TestCase;
@@ -32,10 +31,10 @@ class CampaignTest extends TestCase
 
     public function testAddCampaignItems()
     {
-        $product = new Product(['id' => 1]);
-        $product2 = new Product(['id' => 2]);
-        $coupon = new Coupon(['id' => 1]);
-        $post = new BlogPost(['id' => 1]);
+        $product = (new Product())->setId(1);
+        $product2 = (new Product())->setId(2);
+        $coupon = (new Coupon())->setId(1);
+        $post = (new BlogPost())->setId(1);
 
         $this->campaign->addProduct($product);
         $this->campaign->addCoupon($coupon);
@@ -43,9 +42,36 @@ class CampaignTest extends TestCase
         $this->campaign->addCampaignItem($product2);
 
         $this->assertCount(4, $this->campaign->getCampaignItems());
-        $this->assertEquals($product2->id, $this->campaign->getProducts()[1]->id);
+        $this->assertEquals($product2->getId(), $this->campaign->getProducts()[1]->getId());
     }
 
+    public function testSuccessCampaignPublish()
+    {
+        $product = (new Product())->setId(1);
+        $coupon = (new Coupon())->setId(1);
+        $post = (new BlogPost())->setId(1);
+
+        $this->campaign->addCampaignItem($product, $coupon, $post);
+        $this->campaign->publish();
+
+        $this->assertTrue($this->campaign->isPublished());
+    }
+
+    public function testMultipleCampaignUsedItems()
+    {
+        $product = (new Product())->setId(1);
+        $coupon = (new Coupon())->setId(1);
+        $post = (new BlogPost())->setId(1);
+
+        $campaign2 = new Campaign();
+
+        $this->campaign->addCampaignItem($product, $coupon, $post);
+        $campaign2->addCampaignItem($product, $coupon, $post);
+
+        $this->assertEquals($this->campaign->getCampaignItems(), $campaign2->getCampaignItems());
+    }
+
+/*
     public function testCampaignItemUsed()
     {
         $product = new Product(['id' => 1]);
@@ -56,4 +82,5 @@ class CampaignTest extends TestCase
         $campaign2 = new Campaign();
         $campaign2->addProduct($product);
     }
+*/
 }

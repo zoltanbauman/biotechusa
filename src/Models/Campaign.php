@@ -24,16 +24,16 @@ class Campaign extends BaseModel implements CampaignInterface, PublishableInterf
     }
 
     /**
-     * @param CampaignableInterface $campaignItem
-     * @throws CampaignItemAlreadyUsedException
+     * @param CampaignableInterface ...$campaignItems
      */
-    public function addCampaignItem(CampaignableInterface $campaignItem): void
+    public function addCampaignItem(CampaignableInterface ...$campaignItems): void
     {
-        if ($campaignItem->hasCampaign()) {
-            throw new CampaignItemAlreadyUsedException();
+        foreach ($campaignItems as $campaignItem) {
+            if (!$this->hasCampaignItem($campaignItem)) {
+                $campaignItem->addCampaign($this);
+                $this->items[] = $campaignItem;
+            }
         }
-        $campaignItem->setCampaign($this);
-        $this->items[] = $campaignItem;
     }
 
     /**
@@ -42,6 +42,19 @@ class Campaign extends BaseModel implements CampaignInterface, PublishableInterf
     public function getCampaignItems(): array
     {
         return $this->items;
+    }
+
+    /**
+     * @param CampaignableInterface|BaseModel $campaignItem
+     * @return bool
+     */
+    public function hasCampaignItem(CampaignableInterface $campaignItem): bool
+    {
+        foreach ($this->items as $item) {
+            if ((get_class($item) == get_class($campaignItem)) AND ($item->getId() == $campaignItem->getId())) return true;
+        }
+
+        return false;
     }
 
     /**

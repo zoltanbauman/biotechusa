@@ -8,20 +8,22 @@ trait Campaignable
     /**
      * @var CampaignInterface
      */
-    protected $campaign;
+    protected array $campaigns = [];
 
-    public function setCampaign(CampaignInterface $campaign): void
+    public function addCampaign(CampaignInterface $campaign): void
     {
-        $this->campaign = $campaign;
+        if (!$this->hasCampaign($campaign)) {
+            $this->campaigns[] = $campaign;
+        }
     }
 
-    public function getCampaign(): CampaignInterface
+    public function getCampaigns(): CampaignInterface
     {
-        return $this->campaign;
+        return $this->campaigns;
     }
 
-    public function hasCampaign(): bool
+    public function hasCampaign(CampaignInterface $campaign = null): bool
     {
-        return !is_null($this->campaign);
+        return !is_null($this->campaigns);
     }
 }

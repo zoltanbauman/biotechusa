@@ -3,20 +3,23 @@ namespace Biotech\Models;
 
 class BaseModel
 {
-    protected array $attributes = [];
+    protected $id;
 
-    public function __construct(array $attributes = [])
+    /**
+     * @return int
+     */
+    public function getId(): ?int
     {
-        $this->attributes = $attributes;
+        return $this->id;
     }
 
-    public function __get($name)
+    /**
+     * @param int $id
+     * @return BaseModel
+     */
+    public function setId(int $id): BaseModel
     {
-        return $this->attributes[$name] ?? null;
-    }
-
-    public function __set($name, $value)
-    {
-        $this->attributes[$name] = $value;
+        $this->id = $id;
+        return $this;
     }
 }
