@@ -3,6 +3,8 @@ namespace Biotech\Models;
 
 use Biotech\Exceptions\NotPublishableException;
 use Biotech\Models\Interfaces\PostInterface;
+use DateTime;
+use Exception;
 use phpmock\phpunit\PHPMock;
 use Tests\TestCase;
 
@@ -23,25 +25,48 @@ class BlogTest extends TestCase
         $this->assertFalse($this->blogPost->isPublished());
     }
 
-    public function testPublish()
+    /**
+     * @param $date
+     * @param $result
+     * @throws Exception
+     * @dataProvider getDateProvider
+     */
+    public function testPublish($date, $result)
     {
-        $dateMock = $this->getDateMocker(__NAMESPACE__,1);
+        $postMock = $this->getMockBuilder(BlogPost::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getDate'])
+            ->getMock();
 
-        $this->blogPost->publish();
+        $postMock
+            ->method('getDate')
+            ->willReturn(new DateTime($date));
 
-        $this->assertTrue($this->blogPost->isPublished());
-
-        $dateMock->disable();
+        $this->assertEquals($result, $postMock->isPublishable());
     }
 
     public function testNotPublishableException()
     {
+        $postMock = $this->getMockBuilder(BlogPost::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getDate'])
+            ->getMock();
+
+        $postMock
+            ->method('getDate')
+            ->willReturn(new DateTime('2021-05-29'));
+
         $this->expectException(NotPublishableException::class);
 
-        $dateMocker = $this->getDateMocker(__NAMESPACE__, "6");
+        $postMock->publish();
+    }
 
-        $this->blogPost->publish();
-
-        $dateMocker->disable();
+    public function getDateProvider(): array
+    {
+        return [
+            ['2021-05-21', true],
+            ['2021-05-03', true],
+            ['2021-05-29', false],
+        ];
     }
 }

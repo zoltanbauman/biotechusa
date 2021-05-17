@@ -14,6 +14,6 @@ class BlogPost extends BaseModel implements PostInterface, PublishableInterface,
 
     public function isPublishable(): bool
     {
-        return (date('N') < 6);
+        return ($this->getDate()->format("N") < 6);
     }
 }

@@ -1,32 +1,25 @@
 <?php
 namespace Tests;
 
-use Exception;
-use phpmock\Mock;
-use phpmock\MockBuilder;
+use Biotech\Models\BlogPost;
+use Biotech\Models\Coupon;
 use PHPUnit\Framework\TestCase as UnitTestCase;
 
 abstract class TestCase extends UnitTestCase
 {
-    protected function getDateMocker($namespace, $dateText = '2021-05-22 10:00:00'): Mock
+    public function getCouponMock()
     {
-        $builder = new MockBuilder();
-        $builder->setNamespace($namespace)
-            ->setName('date')
-            ->setFunction(
-                function() use ($dateText) {
-                    return $dateText;
-                }
-            );
-        $dateMock = $builder->build();
-        try {
-            $dateMock->enable();
-        } catch (Exception $e) {
-            $dateMock->disable();
-            $dateMock->enable();
-        }
-
-        return $dateMock;
+        return $this->getMockBuilder(Coupon::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getDate', 'setId', 'getId'])
+            ->getMock();
     }
 
+    public function getBlogPostMock()
+    {
+        return $this->getMockBuilder(BlogPost::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getDate', 'setId', 'getId'])
+            ->getMock();
+    }
 }

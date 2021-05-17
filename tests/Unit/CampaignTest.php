@@ -23,7 +23,6 @@ class CampaignTest extends TestCase
 
     public function testPublishOnEmptyItems()
     {
-
         $this->expectException(NotPublishableException::class);
 
         $this->campaign->publish();
@@ -45,21 +44,9 @@ class CampaignTest extends TestCase
         $this->assertEquals($product2->getId(), $this->campaign->getProducts()[1]->getId());
     }
 
-    public function testSuccessCampaignPublish()
-    {
-        $product = (new Product())->setId(1);
-        $coupon = (new Coupon())->setId(1);
-        $post = (new BlogPost())->setId(1);
-
-        $this->campaign->addCampaignItem($product, $coupon, $post);
-
-        $this->getDateMocker(__NAMESPACE__, "2");
-
-        $this->campaign->publish();
-
-        $this->assertTrue($this->campaign->isPublished());
-    }
-
+    /**
+     * Engedélyezett egy elem több kampányban való jelenlét, amíg nincs publikálva a kampány
+     */
     public function testMultipleCampaignUsedItems()
     {
         $product = (new Product())->setId(1);
@@ -75,33 +62,12 @@ class CampaignTest extends TestCase
     }
 
     /**
-     * A kampányok futtatásának feltétele, hogy jóváhagyott státuszban legyenek
-     */
-    public function testPublishableWithItems()
-    {
-        $product = (new Product())->setId(1);
-        $coupon = (new Coupon())->setId(1);
-        $post = (new BlogPost())->setId(1);
-
-        $this->campaign->addProduct($product);
-        $this->assertTrue($this->campaign->isPublishable());
-
-        $this->getDateMocker(__NAMESPACE__, "3");
-        $this->campaign->addPost($post);
-        $this->assertTrue($this->campaign->isPublishable());
-
-        $this->campaign->addCoupon($coupon);
-        $this->assertTrue($this->campaign->isPublishable());
-    }
-
-    /**
      * Nem futhat két kampány egyidőben, ugyanazokra az elemekre
      *
      * @throws NotPublishableException
      */
     public function testNotPublishableWithMultipleCampaign()
     {
-        $this->getDateMocker(__NAMESPACE__, "3")->disable();
         $product = (new Product())->setId(1);
 
         $this->campaign->addCampaignItem($product);
@@ -113,16 +79,36 @@ class CampaignTest extends TestCase
         $campaign2->publish();
     }
 
-/*
-    public function testCampaignItemUsed()
+    /**
+     * A kampányok futtatásának feltétele, hogy jóváhagyott státuszban legyenek
+     * @dataProvider getItemsProvider
+     */
+    public function testPublishableWithItems(string $date, bool $postResult, bool $couponResult)
     {
-        $product = new Product(['id' => 1]);
+        $product = (new Product())->setId(1);
+        $coupon = (new Coupon())->setId(1);
+        $post = (new BlogPost())->setId(1);
+
+        Campaign::setDate($date);
+
         $this->campaign->addProduct($product);
+        $this->assertTrue($this->campaign->isPublishable());
 
-        $this->expectException(CampaignItemAlreadyUsedException::class);
+        $this->campaign->addPost($post);
+        $this->assertEquals($postResult, $this->campaign->isPublishable());
 
-        $campaign2 = new Campaign();
-        $campaign2->addProduct($product);
+        $this->campaign->addCoupon($coupon);
+        $this->assertEquals($couponResult, $this->campaign->isPublishable());
+
+        $this->assertEquals($postResult&&$couponResult, $this->campaign->isPublishable());
     }
-*/
+
+    public function getItemsProvider(): array
+    {
+        return [
+            ['2021-05-21', true, true],
+            ['2021-05-03', true, false],
+            ['2021-05-29', false, false],
+        ];
+    }
 }
