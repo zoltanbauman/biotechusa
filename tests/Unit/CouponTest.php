@@ -2,6 +2,7 @@
 namespace Biotech\Models;
 
 use Biotech\Models\Interfaces\CouponInterface;
+use DateTime;
 use Tests\TestCase;
 
 class CouponTest extends TestCase
@@ -19,24 +20,31 @@ class CouponTest extends TestCase
         $this->assertFalse($this->coupon->isPublished());
     }
 
-    public function testPublish()
+    /**
+     * @throws \Exception
+     * @dataProvider getDateProvider
+     */
+    public function testPublish($date, $result)
     {
-        $coupon = $this->createMock(Coupon::class);
-        $coupon->method('isPublishable')
-            ->will($this->returnValue(true));
-        $this->coupon->publish();
-        $this->assertTrue($this->coupon->isPublished());
+
+        $couponMock = $this->getMockBuilder(Coupon::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getDate'])
+            ->getMock();
+
+        $couponMock
+            ->method('getDate')
+            ->willReturn(new DateTime($date));
+
+        $this->assertEquals($result, $couponMock->isPublishable());
     }
-/*
-    public function testNotPublishableException()
+
+    public function getDateProvider(): array
     {
-        $coupon = $this->createMock(Coupon::class);
-        $coupon->method('isPublishable')
-            ->will($this->returnValue(false));
-
-        $this->expectExceptionCode(NotPublishableException::class);
-
-        $this->coupon->publish();
+        return [
+            ['2021-05-21', true],
+            ['2021-05-03', false],
+            ['2021-05-29', false],
+        ];
     }
-*/
 }
