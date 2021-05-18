@@ -18,6 +18,6 @@ class Coupon extends BaseModel implements CouponInterface, PublishableInterface,
         $thirdDayOfMonth = (clone $date)->modify("first day of this month")->modify("+3days")->modify("midnight");
         $lastThreeDayOfMonth = (clone $date)->modify("last day of this month")->modify("-2days")->modify("midnight");
 
-        return ($date > $thirdDayOfMonth) AND ($date < $lastThreeDayOfMonth);
+        return ($date <= $thirdDayOfMonth) OR ($date >= $lastThreeDayOfMonth);
     }
 }

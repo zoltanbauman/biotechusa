@@ -42,9 +42,9 @@ class CouponTest extends TestCase
     public function getDateProvider(): array
     {
         return [
-            ['2021-05-21', true],
-            ['2021-05-03', false],
-            ['2021-05-29', false],
+            ['2021-07-21', false],
+            ['2021-07-02', true],
+            ['2021-07-31', true],
         ];
     }
 }

@@ -100,10 +100,7 @@ class CampaignTest extends TestCase
         $this->assertTrue($this->campaign->isPublishable());
 
         $this->campaign->addPost($post);
-        $this->assertEquals($postResult, $this->campaign->isPublishable());
-
         $this->campaign->addCoupon($coupon);
-        $this->assertEquals($couponResult, $this->campaign->isPublishable());
 
         $this->assertEquals($postResult&&$couponResult, $this->campaign->isPublishable());
     }
@@ -111,9 +108,9 @@ class CampaignTest extends TestCase
     public function getItemsProvider(): array
     {
         return [
-            ['2021-05-21', true, true],
-            ['2021-05-03', true, false],
-            ['2021-05-29', false, false],
+            ['2021-05-21', true, false],
+            ['2021-07-02', true, true],
+            ['2021-07-31', false, true],
         ];
     }
 }
