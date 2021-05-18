@@ -1,5 +1,9 @@
 # BioTechUSA teszfeladat
 
+## Requirements
+* `php ^7.4`
+* `composer`
+
 ## Interfészek
 A `PublishableInterface` garantálja az entitások publikálásához szükséges metódusokat.
 A főbb metódusokat a `Publishable` trait tartalmazza, kivéve a `isPublishable` metódust, amit egyedileg minden 
@@ -25,5 +29,8 @@ A kampány publikálása automatikusan az elemek publikálását is maga után v
 **Fontos** a kampány kezdetét és lejáratát egy ütemezett feladat figyelné, ami a kampány indítását és
 lejárat kezelné. Ennek megfelelően a kezdetkor kapcsolná be, és lejáratkor kapcsolná ki.
 
+### Teszt
+php .\vendor\phpunit\phpunit\phpunit .\tests\Unit
 
+Windows esetén: `phpunit`
 
