@@ -5,12 +5,10 @@ use Biotech\Exceptions\NotPublishableException;
 use Biotech\Models\Interfaces\PostInterface;
 use DateTime;
 use Exception;
-use phpmock\phpunit\PHPMock;
 use Tests\TestCase;
 
 class BlogTest extends TestCase
 {
-    use PHPMock;
 
     protected BlogPost $blogPost;
 
