@@ -11,7 +11,7 @@ A hozzá tartozó metódusokat a `Campaignable` trait tartalmazza.
 ## Entitások
 * `Product`: Bármikor publikálható entitás
 * `BlogPost`: Csak hétvégén publikálható entitás
-* `Cupon`: A hónap első és utolsó napját kivéve bármikor aktiválható
+* `Cupon`: A hónap első és utolsó három napjában aktiválható csak
 entitás
 * `Campaign`: Kezdő és végdátummal rendelkező entitás, amihez hozzá lehet adni `CampaignableInterface`-el rendelkező 
   entitásokat.
