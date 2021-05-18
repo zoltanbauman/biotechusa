@@ -59,13 +59,10 @@ class Campaign extends BaseModel implements CampaignInterface, PublishableInterf
     public function isPublishable(): bool
     {
         if (empty($this->items)) return false;
-
         foreach ($this->items as $item) {
-            if ($item->hasPublishedCampaign() OR !$item->isPublishable()) {
-                return false;
-            }
+            if ($item->hasPublishedCampaign()) return false;
+            if (!$item->isPublished() AND !$item->isPublishable()) return false;
         }
-
         return true;
     }
 
